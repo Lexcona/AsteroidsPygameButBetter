@@ -1,6 +1,11 @@
 import pygame
-from logger import log_state
+from logger import log_state, log_event
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
+from player import Player
+from asteroid import Asteroid
+from asteroidfield import AsteroidField
+from shot import Shot
+import sys
 
 def main():
     print(f"Starting Asteroids with pygame version: {pygame.version.ver}")
@@ -8,7 +13,24 @@ def main():
     print(f"Screen height: {SCREEN_HEIGHT}")
 
     pygame.init()
+    clock = pygame.time.Clock()
+    dt = 0.0
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+    # Player is the name of the class, not an instance of it
+    # This must be done before any Player objects are created
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    asteroids = pygame.sprite.Group()
+    shots = pygame.sprite.Group()
+    Player.containers = (updatable, drawable)
+    Asteroid.containers = (asteroids, updatable, drawable)
+    AsteroidField.containers = (updatable)
+    Shot.containers = (shots, updatable, drawable)
+
+    ASS_TURD_oids_LMAOOOOOOOOOO = AsteroidField()
+    big_blessed_doug = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+
 
     while True:
         log_state()
@@ -17,9 +39,33 @@ def main():
             if event.type == pygame.QUIT:
                 return
 
+        # STAGE 1 - CLEAR THE STAGE
         screen.fill('black')
 
+        # STAGE 2 - UPDATE VARIOUS POEPLE AND ANIMALS (numbers, theyre)
+        updatable.update(dt)
+        for asteroid in asteroids:
+            # CHECK IF HIT THE PLAYER
+            if big_blessed_doug.collides_with(asteroid):
+                log_event("player_hit")
+                print("Game over!")
+                sys.exit()
+            # CHECK IF HITTING A SHOT
+            for shot in shots:
+                if shot.collides_with(asteroid):
+                    # THIS ASTEROID GOT HIT BY THIS SHOT!!!!
+                    log_event("asteroid_shot")
+                    asteroid.split()
+                    shot.kill()
+
+        # STAGE 3 - DRAW EVERYONE TO SCREEN
+        for droble in drawable:
+            droble.draw(screen)
+
+        # STAGE 4 - FLIP???
         pygame.display.flip()
+        dt = clock.tick(60) / 1000
+        # print(dt)
 
 if __name__ == "__main__":
     main()
