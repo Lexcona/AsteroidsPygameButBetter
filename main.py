@@ -7,6 +7,7 @@ from texture.player import Player
 from texture.asteroid import Asteroid
 from texture.asteroidfield import AsteroidField
 from texture.shot import Shot
+from texture.star import Star, StarField
 import sys
 
 def main():
@@ -29,11 +30,13 @@ def main():
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = (updatable)
     Shot.containers = (shots, updatable, drawable)
+    Star.containers = (updatable, drawable)
+    StarField.containers = (updatable)
 
+    # Make starts go BRRRRRRRRRRR
+    star_system = StarField()
     ASS_TURD_oids_LMAOOOOOOOOOO = AsteroidField()
     big_blessed_doug = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-
-
 
     scoring.score_update()
 
