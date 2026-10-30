@@ -1,19 +1,30 @@
 import pygame
 
 from constants import *
-from libs import sounds
+from libs import sounds, extra
 from texture.shot import Shot
 from texture.circleshape import CircleShape
 
 class Player(CircleShape):
-    
+    _textures: dict[int, pygame.Surface] = {}
+
     def __init__(self, x: float, y: float) -> None:
         super().__init__(x, y, PLAYER_RADIUS)
+        self.texture = self._get_texture(self.radius)
         self.rotation = 0
         self.shot_cooldown = 0
 
+    @classmethod
+    def _get_texture(cls, radius: float) -> pygame.Surface:
+        size = max(1, round(radius * 2))
+        if size not in cls._textures:
+            image, _ = extra.load_image("textures/plane.png")
+            cls._textures[size] = pygame.transform.smoothscale(image, (size, size))
+        return cls._textures[size]
+
     def draw(self, screen: pygame.Surface) -> None:
-        pygame.draw.polygon(screen, 'white', self.triangle(), LINE_WIDTH)
+        texture = pygame.transform.rotate(self.texture, 180 - self.rotation)
+        screen.blit(texture, texture.get_rect(center=self.position))
 
     def rotate(self, dt: float):
         self.rotation += dt * PLAYER_TURN_SPEED
