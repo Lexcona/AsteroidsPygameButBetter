@@ -1,10 +1,12 @@
 import pygame
-from logger import log_state, log_event
+
+from libs import scoring
+from libs.logger import log_state, log_event
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
-from player import Player
-from asteroid import Asteroid
-from asteroidfield import AsteroidField
-from shot import Shot
+from texture.player import Player
+from texture.asteroid import Asteroid
+from texture.asteroidfield import AsteroidField
+from texture.shot import Shot
 import sys
 
 def main():
@@ -31,6 +33,9 @@ def main():
     ASS_TURD_oids_LMAOOOOOOOOOO = AsteroidField()
     big_blessed_doug = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 
+
+
+    scoring.score_update()
 
     while True:
         log_state()
@@ -61,6 +66,8 @@ def main():
         # STAGE 3 - DRAW EVERYONE TO SCREEN
         for droble in drawable:
             droble.draw(screen)
+
+        screen.blit(scoring.scoreText, (10, 10))
 
         # STAGE 4 - FLIP???
         pygame.display.flip()

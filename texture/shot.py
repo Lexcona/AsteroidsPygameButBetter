@@ -1,9 +1,9 @@
 import pygame
 
-import extra
+from libs import extra
 
 from constants import *
-from circleshape import CircleShape
+from texture.circleshape import CircleShape
 
 class Shot(CircleShape):
     _textures: dict[int, pygame.Surface] = {}
@@ -16,7 +16,7 @@ class Shot(CircleShape):
     def _get_texture(cls, radius: float) -> pygame.Surface:
         size = max(1, round(radius * 2))
         if size not in cls._textures:
-            image, _ = extra.load_image("bullet.png")
+            image, _ = extra.load_image("textures/bullet.png")
             cls._textures[size] = pygame.transform.smoothscale(image, (size, size))
         return cls._textures[size]
 

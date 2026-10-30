@@ -2,11 +2,10 @@ import random
 
 import pygame
 
-import extra
-
-from circleshape import CircleShape
 from constants import *
-from logger import log_event
+from libs import scoring, extra, sounds
+from libs.logger import log_event
+from texture.circleshape import CircleShape
 
 class Asteroid(CircleShape):
     _textures: dict[int, pygame.Surface] = {}
@@ -21,7 +20,7 @@ class Asteroid(CircleShape):
     def _get_texture(cls, radius:float) -> pygame.Surface:
         size = max(1, round(radius * 2))
         if size not in cls._textures:
-            image, _ = extra.load_image("astroid.png")
+            image, _ = extra.load_image("textures/astroid.png")
             cls._textures[size] = pygame.transform.smoothscale(image, (size, size))
         return cls._textures[size]
 
@@ -36,8 +35,12 @@ class Asteroid(CircleShape):
     def split(self):
         self.kill()
 
+        sounds.explosion()
+
         # Is this a small asteroid? if so, just let it die
         if self.radius <= ASTEROID_MIN_RADIUS:
+            scoring.player_score += 1
+            scoring.score_update()
             return
         log_event("asteroid_split")
 

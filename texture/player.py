@@ -1,7 +1,9 @@
-from circleshape import CircleShape
-from constants import *
-from shot import Shot
 import pygame
+
+from constants import *
+from libs import sounds
+from texture.shot import Shot
+from texture.circleshape import CircleShape
 
 class Player(CircleShape):
     
@@ -47,7 +49,6 @@ class Player(CircleShape):
         return [a, b, c]
 
     def shoot(self):
-
         if self.shot_cooldown > 0:
             return
         self.shot_cooldown = PLAYER_SHOOT_COOLDOWN_SECONDS
@@ -56,4 +57,5 @@ class Player(CircleShape):
         unit_vect = pygame.Vector2(0,1)
         rotated_vect = unit_vect.rotate(self.rotation)
         new_shot.velocity = rotated_vect * PLAYER_SHOOT_SPEED
-    
+
+        sounds.shoot()

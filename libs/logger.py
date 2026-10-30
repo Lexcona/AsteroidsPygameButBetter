@@ -1,6 +1,7 @@
 import inspect
 import json
 import math
+import os
 from datetime import datetime
 from typing import NotRequired, TypedDict
 
@@ -19,6 +20,8 @@ class GroupInfo(TypedDict):
 
 
 __all__ = ["log_state", "log_event"]
+
+log_folder = "logs"
 
 _FPS = 60
 _MAX_SECONDS = 16
@@ -127,7 +130,10 @@ def log_state() -> None:
 
     # New log file on each run
     mode = "w" if not _state_log_initialized else "a"
-    with open("game_state.jsonl", mode) as f:
+
+    os.makedirs(log_folder, exist_ok=True)
+
+    with open(f"{log_folder}/game_state.jsonl", mode) as f:
         f.write(json.dumps(entry) + "\n")
 
     _state_log_initialized = True
@@ -147,7 +153,10 @@ def log_event(event_type: str, **details: object) -> None:
     }
 
     mode = "w" if not _event_log_initialized else "a"
-    with open("game_events.jsonl", mode) as f:
+
+    os.makedirs(log_folder, exist_ok=True)
+
+    with open(f"{log_folder}/game_events.jsonl", mode) as f:
         f.write(json.dumps(event) + "\n")
 
     _event_log_initialized = True
